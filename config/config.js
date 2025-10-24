@@ -6,12 +6,24 @@ export default {
   nodeEnv: process.env.NODE_ENV || 'development',
   port: parseInt(process.env.PORT || '4243', 10),
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5173',
-  
-  // Database settings
-  mongoUri: process.env.NODE_ENV === 'production'
-    ? process.env.MONGODB_URI_PROD
-    : (process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/kimono-style-shop-main'),
-  
+
+  // Database settings - MySQL
+  mysql: {
+    host: process.env.DB_HOST || 'localhost',
+    port: parseInt(process.env.DB_PORT || '3306', 10),
+    database: process.env.DB_NAME || 'kimono_shop',
+    username: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    dialect: 'mysql',
+    logging: process.env.NODE_ENV === 'development' ? console.log : false,
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000
+    }
+  },
+
   // JWT settings
   jwt: {
     secret: process.env.JWT_SECRET,
@@ -23,7 +35,7 @@ export default {
       httpOnly: true
     }
   },
-  
+
   // Email settings
   email: {
     host: process.env.EMAIL_HOST,
@@ -32,7 +44,7 @@ export default {
     pass: process.env.EMAIL_PASS,
     from: process.env.EMAIL_FROM
   },
-  
+
   // Security settings
   cors: {
     // In development allow all origins for convenience. In production set CORS_ALLOWED_ORIGINS.
@@ -41,12 +53,12 @@ export default {
       : (process.env.CORS_ALLOWED_ORIGINS ? process.env.CORS_ALLOWED_ORIGINS.split(',') : []),
     credentials: true
   },
-  
+
   rateLimit: {
     windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000', 10), // 15 minutes
     max: parseInt(process.env.RATE_LIMIT_MAX || '100', 10)
   },
-  
+
   // PayPal settings
   paypal: {
     clientId: process.env.PAYPAL_CLIENT_ID,

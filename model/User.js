@@ -1,51 +1,74 @@
-import mongoose from 'mongoose';
+// models/User.js
+import { DataTypes } from 'sequelize';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
+import sequelize from '../config/database.js';
 
-const userSchema = new mongoose.Schema({
+const User = sequelize.define('User', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
   name: {
-    type: String,
-    required: [true, 'Please provide a name'],
-    trim: true,
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: true,
+    },
   },
   email: {
-    type: String,
-    required: [true, 'Please provide an email'],
+    type: DataTypes.STRING,
+    allowNull: false,
     unique: true,
-    lowercase: true,
-    match: [/^\S+@\S+\.\S+$/, 'Please provide a valid email'],
+    validate: {
+      isEmail: true,
+      notEmpty: true,
+    },
   },
   password: {
-    type: String,
-    required: [true, 'Please provide a password'],
-    minlength: 8,
-    select: false, // Don't include password in normal queries
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      len: [8, 255],
+    },
   },
-  resetPasswordToken: String,
-  resetPasswordExpire: Date,
-  createdAt: {
-    type: Date,
-    default: Date.now,
+  resetPasswordToken: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
+  resetPasswordExpire: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+}, {
+  tableName: 'users',
+  timestamps: true,
+  indexes: [
+    {
+      unique: true,
+      fields: ['email'],
+    },
+  ],
 });
 
 // Hash password before saving
-userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) {
-    return next();
-  }
-  
-  try {
+User.beforeCreate(async (user) => {
+  if (user.changed('password')) {
     const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (error) {
-    next(error);
+    user.password = await bcrypt.hash(user.password, salt);
   }
 });
 
-// Method to compare password for login
-userSchema.methods.comparePassword = async function(candidatePassword) {
+User.beforeUpdate(async (user) => {
+  if (user.changed('password')) {
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(user.password, salt);
+  }
+});
+
+// Instance methods
+User.prototype.comparePassword = async function(candidatePassword) {
   try {
     return await bcrypt.compare(candidatePassword, this.password);
   } catch (error) {
@@ -53,8 +76,7 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
   }
 };
 
-// Generate password reset token
-userSchema.methods.getResetPasswordToken = function() {
+User.prototype.getResetPasswordToken = function() {
   // Generate token
   const resetToken = crypto.randomBytes(32).toString('hex');
 
@@ -64,11 +86,10 @@ userSchema.methods.getResetPasswordToken = function() {
     .update(resetToken)
     .digest('hex');
 
-  // Set expire
-  this.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
+  // Set expire (10 minutes from now)
+  this.resetPasswordExpire = new Date(Date.now() + 10 * 60 * 1000);
 
   return resetToken;
 };
 
-const User = mongoose.model('User', userSchema);
 export default User;
