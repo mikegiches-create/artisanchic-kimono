@@ -2,6 +2,7 @@ import User from '../model/User.js';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
+import { Op } from 'sequelize';
 import config from '../config/config.js';
 
 // Create JWT token
@@ -13,7 +14,7 @@ const createToken = (user) => {
 
   const expiresIn = (config && config.jwt && config.jwt.expiresIn) || '1d';
 
-  return jwt.sign({ id: user._id, email: user.email }, jwtSecret, { expiresIn });
+  return jwt.sign({ id: user.id, email: user.email }, jwtSecret, { expiresIn });
 };
 
 // Configure nodemailer (optional). If not configured, transporter will be null and emails will be skipped.
@@ -61,7 +62,7 @@ export const register = async (req, res) => {
     const { name, email, password } = req.body;
 
     // Check if user already exists
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       return res.status(400).json({
         success: false,
@@ -85,7 +86,7 @@ export const register = async (req, res) => {
     res.status(201).json({
       success: true,
       user: {
-        id: user._id,
+        id: user.id,
         name: user.name,
         email: user.email,
       },
@@ -104,7 +105,7 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
 
     // Check if user exists
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ where: { email } });
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -130,7 +131,7 @@ export const login = async (req, res) => {
     res.status(200).json({
       success: true,
       user: {
-        id: user._id,
+        id: user.id,
         name: user.name,
         email: user.email,
       },
@@ -146,7 +147,7 @@ export const login = async (req, res) => {
 // Forgot password
 export const forgotPassword = async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
+    const user = await User.findOne({ where: { email: req.body.email } });
 
     if (!user) {
       return res.status(404).json({
@@ -199,11 +200,11 @@ export const forgotPassword = async (req, res) => {
 // Get current user
 export const getMe = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findByPk(req.user.id);
     res.status(200).json({
       success: true,
       user: {
-        id: user._id,
+        id: user.id,
         name: user.name,
         email: user.email
       }
@@ -232,15 +233,14 @@ export const logout = async (req, res) => {
 // Reset password
 export const resetPassword = async (req, res) => {
   try {
-    // Get hashed token
-    const resetPasswordToken = crypto
-      .createHash('sha256')
-      .update(req.params.resetToken)
-      .digest('hex');
-
     const user = await User.findOne({
-      resetPasswordToken,
-      resetPasswordExpire: { $gt: Date.now() },
+      where: {
+        resetPasswordToken: crypto
+          .createHash('sha256')
+          .update(req.params.resetToken)
+          .digest('hex'),
+        resetPasswordExpire: { [Op.gt]: new Date() }
+      }
     });
 
     if (!user) {
@@ -252,8 +252,8 @@ export const resetPassword = async (req, res) => {
 
     // Set new password
     user.password = req.body.password;
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpire = undefined;
+    user.resetPasswordToken = null;
+    user.resetPasswordExpire = null;
     await user.save();
 
     res.status(200).json({

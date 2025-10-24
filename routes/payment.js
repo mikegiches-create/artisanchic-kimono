@@ -10,9 +10,14 @@ const PAYPAL_API =
 
 // 🔑 Get PayPal access token
 async function getAccessToken() {
-  const auth = Buffer.from(
-    `Ae53Yrvvid-NyP6Cszyl5XIY196NMUdDuA2G5tvgkL0n8Nso95pE2a_RUR-3P4k5RZ07yATerLtr-2y7:ELMqlVHRgwVA9djkseBJoJuaEcLhthAEiur2pvY1QHabrc_qFuJCrFXYqDpTFef982k_QxQjgD50JDvV`
-  ).toString("base64");
+  const clientId = process.env.PAYPAL_CLIENT_ID;
+  const clientSecret = process.env.PAYPAL_CLIENT_SECRET;
+
+  if (!clientId || !clientSecret) {
+    throw new Error('PayPal credentials not configured. Please set PAYPAL_CLIENT_ID and PAYPAL_CLIENT_SECRET in environment variables.');
+  }
+
+  const auth = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
 
   const response = await axios({
     url: `${PAYPAL_API}/v1/oauth2/token`,
