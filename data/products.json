@@ -1,0 +1,163 @@
+[
+  {
+    "id": 7,
+    "name": "Sahara Sunset Kimono",
+    "description": "A stunning full height vibrant orange kimono with subtle accents, perfect for blending elegance with a pop of colour. Lightweight, versatile, and stylish.",
+    "price": 85.0,
+    "originalPrice": 100.0,
+    "currency": "GBP",
+    "image": "/src/assets/Sahara Sunset.jpg",
+    "images": [
+      "/src/assets/MODEL 1 SAHARA SUNSET.jpg",
+      "/src/assets/MODEL 2 SAHARA SUNSET.jpg"
+    ],
+    "category": "casual",
+    "inStock": true,
+    "colors": ["orange"],
+    "averageRating": 5,
+    "reviewCount": 0,
+    "verifiedPurchase": true,
+    "ratingBreakdown": { "5": 20, "4": 8, "3": 3, "2": 1, "1": 0 }
+  },
+  {
+    "id": 4,
+    "name": "Azure Elegance Kimono",
+    "description": "A stylish full height blue kimono with an intricate patterns, perfect for layering over casual or formal outfits. Lightweight, versatile, and effortlessly elegant.",
+    "price": 85.0,
+    "originalPrice": 100.0,
+    "currency": "GBP",
+    "image": "/src/assets/Azure Elegance.jpg",
+    "images": [
+      "/src/assets/Back Azure.jpg",
+      "/src/assets/Azure pattern.jpg"
+    ],
+    "category": "formal",
+    "inStock": true,
+    "colors": ["blue"],
+    "averageRating": 5,
+    "reviewCount": 0,
+    "verifiedPurchase": true,
+    "ratingBreakdown": { "5": 10, "4": 5, "3": 2, "2": 1, "1": 0 }
+  },
+  {
+    "id": 8,
+    "name": "Teal Harmony Kimono",
+    "description": "A beautiful full height teal kimono with contrasting black trim, perfect for elevating your casual or formal look. Stylish, lightweight, and versatile.",
+    "price": 85.0,
+    "originalPrice": 100.0,
+    "currency": "GBP",
+    "image": "/src/assets/Teal Harmony.jpg",
+    "images": [
+      "/src/assets/Back teal harmony.jpg",
+      "/src/assets/pettern teal harmony.jpg"
+    ],
+    "category": "formal",
+    "inStock": true,
+    "colors": ["green"],
+    "averageRating": 5,
+    "reviewCount": 0,
+    "verifiedPurchase": true,
+    "ratingBreakdown": { "5": 35, "4": 4, "3": 2, "2": 0, "1": 0 }
+  },
+  {
+    "id": 2,
+    "name": "Scarlet Grace Kimono",
+    "description": "A striking full height red and black kimono with elegant patterns, perfect for adding bold sophistication to any outfit. Lightweight and versatile.",
+    "price": 85.0,
+    "originalPrice": 100.0,
+    "currency": "GBP",
+    "image": "/src/assets/Scarlet Grace.jpg",
+    "images": [
+      "/src/assets/BACK  scarlet grace.jpg",
+      "/src/assets/pattern scarlet grace.jpg"
+    ],
+    "category": "outerwear",
+    "inStock": true,
+    "colors": ["red"],
+    "averageRating": 5,
+    "reviewCount": 0,
+    "verifiedPurchase": true,
+    "ratingBreakdown": { "5": 6, "4": 3, "3": 2, "2": 1, "1": 0 }
+  },
+  {
+    "id": 5,
+    "name": "Flame Ember Kimono",
+    "description": "A striking full height kimono with a bold flame pattern, designed to add fiery elegance and a daring edge to any outfit. Lightweight and versatile.",
+    "price": 85.0,
+    "originalPrice": 100.0,
+    "currency": "GBP",
+    "image": "/src/assets/Flame Ember.jpg",
+    "images": [
+      "/src/assets/Back Flame EMBER.jpg",
+      "/src/assets/PATTERN FLAME EMBER.jpg"
+    ],
+    "category": "casual",
+    "inStock": true,
+    "colors": ["gold"],
+    "averageRating": 5,
+    "reviewCount": 0,
+    "verifiedPurchase": true,
+    "ratingBreakdown": { "5": 19, "4": 6, "3": 1, "2": 1, "1": 0 }
+  },
+  {
+    "id": 1,
+    "name": "Crimson Wave Kimono",
+    "description": "A stunning full-height blue kimono with subtle reddish accents, perfect for blending elegance with a pop of colour. Features a black band on the cuff. Lightweight, versatile, and stylish.",
+    "price": 85.0,
+    "originalPrice": 100.0,
+    "currency": "GBP",
+    "image": "/src/assets/Crimson Wave.jpg",
+    "images": [
+      "/src/assets/Back crimson.jpg",
+      "/src/assets/patttern crimson.jpg"
+    ],
+    "category": "formal",
+    "inStock": true,
+    "colors": ["blue"],
+    "averageRating": 5,
+    "reviewCount": 0,
+    "verifiedPurchase": true,
+    "ratingBreakdown": { "5": 12, "4": 7, "3": 3, "2": 1, "1": 0 }
+  },
+  {
+    "id": 6,
+    "name": "Kericho Emerald Kimono",
+    "description": "A stunning full height green, black & white kimono on an abstract design, perfect for blending elegance with a pop of colour. Lightweight, versatile, and stylish.",
+    "price": 85.0,
+    "originalPrice": 100.0,
+    "currency": "GBP",
+    "image": "/src/assets/Kericho Emerald.jpg",
+    "images": [
+      "/src/assets/MODEL 1 KERICHO EMERALD.jpg",
+      "/src/assets/MODEL2 KERICHOO.jpg"
+    ],
+    "category": "outerwear",
+    "inStock": true,
+    "colors": ["green"],
+    "averageRating": 5,
+    "reviewCount": 0,
+    "verifiedPurchase": true,
+    "ratingBreakdown": { "5": 28, "4": 5, "3": 1, "2": 1, "1": 0 }
+  },
+  {
+    "id": 3,
+    "name": "Scarlet Ohara Kimono",
+    "description": "A stunning full height vibrant red & black kimono on a striking design, perfect for blending elegance with a pop of colour. Lightweight, versatile, and stylish.",
+    "price": 85.0,
+    "originalPrice": 100.0,
+    "currency": "GBP",
+    "image": "/src/assets/Scarlet Ohara.jpg",
+    "images": [
+      "/src/assets/ohara model 1.jpg",
+      "/src/assets/ohara model 2.jpg",
+      "/src/assets/ohara back.jpg"
+    ],
+    "category": "casual",
+    "inStock": true,
+    "colors": ["red"],
+    "averageRating": 5,
+    "reviewCount": 0,
+    "verifiedPurchase": true,
+    "ratingBreakdown": { "5": 7, "4": 4, "3": 2, "2": 2, "1": 0 }
+  }
+]
