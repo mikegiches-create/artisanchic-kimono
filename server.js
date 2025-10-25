@@ -13,7 +13,13 @@ import orderRoutes from "./routes/orders.js";
 import productRoutes from "./routes/products.js";
 import authRoutes from "./routes/auth.js";
 import paypalOrderRoutes from "./routes/paypal-order.js";
+import uploadRoutes from "./routes/upload.js";
 import config from "./config/config.js";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Load environment variables
 dotenv.config();
@@ -65,6 +71,9 @@ app.use((req, res, next) => {
 app.use(express.json({ limit: '10kb' })); // Limit body size
 app.use(express.urlencoded({ extended: true }));
 
+// Serve static files (uploaded images)
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+
 // MySQL Database Connection with enhanced error handling
 const connectDatabase = async () => {
   try {
@@ -89,6 +98,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/paypal", paypalOrderRoutes);
+app.use("/api/upload", uploadRoutes);
 
 // Debug endpoint to show what CORS header will be set for the incoming request
 app.get('/debug/cors', (req, res) => {
