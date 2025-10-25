@@ -69,6 +69,7 @@ const Order = sequelize.define('Order', {
 }, {
   tableName: 'orders',
   timestamps: true,
+  underscored: false, // Use camelCase for column names
   indexes: [
     {
       fields: ['userId'],

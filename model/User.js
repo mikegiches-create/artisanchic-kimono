@@ -44,6 +44,7 @@ const User = sequelize.define('User', {
 }, {
   tableName: 'users',
   timestamps: true,
+  underscored: false, // Use camelCase for column names
   indexes: [
     {
       unique: true,

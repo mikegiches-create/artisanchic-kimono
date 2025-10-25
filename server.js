@@ -3,14 +3,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import sequelize from "./config/database.js";
-// mongodb-memory-server is a dev-time in-memory MongoDB used as a fallback
-let MongoMemoryServer = null;
-try {
-  // require only when available (dev dependency)
-  MongoMemoryServer = (await import('mongodb-memory-server')).MongoMemoryServer;
-} catch (err) {
-  // ignore if not installed
-}
+import { User, Order, Product } from "./model/index.js";
 import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
 import rateLimit from "express-rate-limit";

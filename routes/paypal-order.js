@@ -1,21 +1,24 @@
-// backend/order.js
+// backend/routes/paypal-order.js
 import express from "express";
 import fetch from "node-fetch";
 import dotenv from "dotenv";
-import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import Product from "../model/Product.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 const router = express.Router();
 
-// Load products.json once at startup
-const products = JSON.parse(fs.readFileSync("./products.json", "utf-8"));
-
 // PayPal credentials
 const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
-const PAYPAL_CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET;
+const PAYPAL_CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET || process.env.PAYPAL_SECRET;
 
 if (!PAYPAL_CLIENT_ID || !PAYPAL_CLIENT_SECRET) {
-  throw new Error('PayPal credentials not configured. Please set PAYPAL_CLIENT_ID and PAYPAL_CLIENT_SECRET in environment variables.');
+  console.warn('⚠️  PayPal credentials not configured. PayPal payment routes will not work.');
+  console.warn('   Set PAYPAL_CLIENT_ID and PAYPAL_CLIENT_SECRET in .env file');
 }
 
 const PAYPAL_ENVIRONMENT = process.env.PAYPAL_ENVIRONMENT || "sandbox";
@@ -55,16 +58,32 @@ router.post("/create-order", async (req, res) => {
       return res.status(400).json({ error: "Invalid items payload" });
     }
 
+    if (!PAYPAL_CLIENT_ID || !PAYPAL_CLIENT_SECRET) {
+      return res.status(503).json({ 
+        error: "PayPal payment is not configured on this server" 
+      });
+    }
+
+    // Fetch products from database
+    const productIds = items.map(item => item.id);
+    const dbProducts = await Product.findAll({
+      where: { id: productIds }
+    });
+
+    if (dbProducts.length !== items.length) {
+      return res.status(404).json({ error: "One or more products not found" });
+    }
+
     // Match items with product details
     const orderItems = items.map((item) => {
-      const product = products.find((p) => p.id === item.id);
+      const product = dbProducts.find((p) => p.id === item.id);
       if (!product) throw new Error(`Product with id ${item.id} not found`);
 
       return {
         name: product.name,
         unit_amount: {
-          currency_code: product.currency,
-          value: product.price.toFixed(2),
+          currency_code: product.currency || 'GBP',
+          value: parseFloat(product.price).toFixed(2),
         },
         quantity: item.quantity.toString(),
       };
@@ -122,6 +141,12 @@ router.post("/capture-order", async (req, res) => {
   try {
     const { orderID } = req.body;
     if (!orderID) return res.status(400).json({ error: "Missing orderID" });
+
+    if (!PAYPAL_CLIENT_ID || !PAYPAL_CLIENT_SECRET) {
+      return res.status(503).json({ 
+        error: "PayPal payment is not configured on this server" 
+      });
+    }
 
     const accessToken = await generateAccessToken();
 

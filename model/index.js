@@ -2,10 +2,14 @@
 import sequelize from '../config/database.js';
 import User from './User.js';
 import Order from './Order.js';
+import Product from './Product.js';
 
 // Initialize associations
 User.associate = (models) => {
-  // User associations can be added here if needed
+  User.hasMany(models.Order, {
+    foreignKey: 'userId',
+    as: 'orders',
+  });
 };
 
 Order.associate = (models) => {
@@ -15,12 +19,17 @@ Order.associate = (models) => {
   });
 };
 
+Product.associate = (models) => {
+  // Product associations can be added here if needed (e.g., reviews, categories)
+};
+
 // Define associations
-Object.keys({ User, Order }).forEach((modelName) => {
-  if ({ User, Order }[modelName].associate) {
-    { User, Order }[modelName].associate({ User, Order });
+const models = { User, Order, Product };
+Object.keys(models).forEach((modelName) => {
+  if (models[modelName].associate) {
+    models[modelName].associate(models);
   }
 });
 
-export { sequelize, User, Order };
-export default { sequelize, User, Order };
+export { sequelize, User, Order, Product };
+export default { sequelize, User, Order, Product };
